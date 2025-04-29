@@ -1,0 +1,506 @@
+---
+import CopyButton from './components/CopyButton.astro';
+import GlobalNavigation from '../components/GlobalNavigation.astro';
+
+// お問い合わせフォームによく使われるラベル項目
+const contactLabels = {
+  en: {
+    // 基本情報
+    contactUs: 'Contact Us',
+    getInTouch: 'Get in Touch',
+    contactInfo: 'Contact Information',
+    contactForm: 'Contact Form',
+    
+    // 個人情報
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    fullName: 'Full Name',
+    email: 'Email Address',
+    phone: 'Phone Number',
+    mobile: 'Mobile Number',
+    company: 'Company Name',
+    position: 'Position/Title',
+    department: 'Department',
+    
+    // 住所情報
+    address: 'Address',
+    addressLine1: 'Address Line 1',
+    addressLine2: 'Address Line 2',
+    city: 'City',
+    state: 'State/Province',
+    zipCode: 'ZIP/Postal Code',
+    country: 'Country',
+    
+    // お問い合わせ内容
+    subject: 'Subject',
+    message: 'Message',
+    inquiry: 'Inquiry',
+    inquiryType: 'Inquiry Type',
+    comments: 'Comments',
+    details: 'Details',
+    
+    // お問い合わせ種別
+    generalInquiry: 'General Inquiry',
+    productSupport: 'Product Support',
+    technicalIssue: 'Technical Issue',
+    billing: 'Billing Question',
+    feedback: 'Feedback',
+    partnership: 'Partnership Opportunity',
+    mediaInquiry: 'Media Inquiry',
+    
+    // 送信関連
+    submit: 'Submit',
+    send: 'Send',
+    sendMessage: 'Send Message',
+    reset: 'Reset',
+    clear: 'Clear Form',
+    
+    // 確認・同意
+    required: 'Required',
+    optional: 'Optional',
+    privacyConsent: 'I have read and agree to the Privacy Policy',
+    marketingConsent: 'I would like to receive updates and newsletters',
+    captcha: 'Please complete the captcha',
+    
+    // 完了・フォローアップ
+    thankYou: 'Thank You',
+    confirmation: 'Your message has been sent',
+    responseTime: 'We will respond within 24 hours',
+    followUp: 'We will follow up with you shortly',
+    
+    // エラーメッセージ
+    requiredField: 'This field is required',
+    invalidEmail: 'Please enter a valid email address',
+    invalidPhone: 'Please enter a valid phone number',
+    minLength: 'Please enter at least {n} characters',
+    maxLength: 'Please enter no more than {n} characters',
+    
+    // その他
+    officeHours: 'Office Hours',
+    callUs: 'Call Us',
+    emailUs: 'Email Us',
+    visitUs: 'Visit Us',
+    faq: 'Frequently Asked Questions'
+  },
+  ja: {
+    // 基本情報
+    contactUs: 'お問い合わせ',
+    getInTouch: 'お気軽にご連絡ください',
+    contactInfo: 'お問い合わせ先情報',
+    contactForm: 'お問い合わせフォーム',
+    
+    // 個人情報
+    firstName: '名',
+    lastName: '姓',
+    fullName: 'お名前',
+    email: 'メールアドレス',
+    phone: '電話番号',
+    mobile: '携帯電話番号',
+    company: '会社名',
+    position: '役職',
+    department: '部署',
+    
+    // 住所情報
+    address: '住所',
+    addressLine1: '住所1',
+    addressLine2: '住所2',
+    city: '市区町村',
+    state: '都道府県',
+    zipCode: '郵便番号',
+    country: '国',
+    
+    // お問い合わせ内容
+    subject: '件名',
+    message: 'メッセージ',
+    inquiry: 'お問い合わせ内容',
+    inquiryType: 'お問い合わせ種別',
+    comments: 'コメント',
+    details: '詳細',
+    
+    // お問い合わせ種別
+    generalInquiry: '一般的なお問い合わせ',
+    productSupport: '製品サポート',
+    technicalIssue: '技術的な問題',
+    billing: '請求に関するお問い合わせ',
+    feedback: 'ご意見・ご感想',
+    partnership: '業務提携について',
+    mediaInquiry: '取材・メディア関連',
+    
+    // 送信関連
+    submit: '送信',
+    send: '送信する',
+    sendMessage: 'メッセージを送信',
+    reset: 'リセット',
+    clear: 'フォームをクリア',
+    
+    // 確認・同意
+    required: '必須',
+    optional: '任意',
+    privacyConsent: 'プライバシーポリシーに同意します',
+    marketingConsent: 'ニュースレターを受け取る',
+    captcha: 'キャプチャを完了してください',
+    
+    // 完了・フォローアップ
+    thankYou: 'ありがとうございます',
+    confirmation: 'メッセージが送信されました',
+    responseTime: '24時間以内にご返信いたします',
+    followUp: '近日中にご連絡いたします',
+    
+    // エラーメッセージ
+    requiredField: 'この項目は必須です',
+    invalidEmail: '有効なメールアドレスを入力してください',
+    invalidPhone: '有効な電話番号を入力してください',
+    minLength: '{n}文字以上入力してください',
+    maxLength: '{n}文字以内で入力してください',
+    
+    // その他
+    officeHours: '営業時間',
+    callUs: 'お電話でのお問い合わせ',
+    emailUs: 'メールでのお問い合わせ',
+    visitUs: '所在地',
+    faq: 'よくあるご質問'
+  }
+} as const;
+
+// カテゴリー分け
+const categories = {
+  basic: ['contactUs', 'getInTouch', 'contactInfo', 'contactForm'],
+  personal: ['firstName', 'lastName', 'fullName', 'email', 'phone', 'mobile', 'company', 'position', 'department'],
+  address: ['address', 'addressLine1', 'addressLine2', 'city', 'state', 'zipCode', 'country'],
+  content: ['subject', 'message', 'inquiry', 'inquiryType', 'comments', 'details'],
+  inquiryTypes: ['generalInquiry', 'productSupport', 'technicalIssue', 'billing', 'feedback', 'partnership', 'mediaInquiry'],
+  buttons: ['submit', 'send', 'sendMessage', 'reset', 'clear'],
+  consent: ['required', 'optional', 'privacyConsent', 'marketingConsent', 'captcha'],
+  completion: ['thankYou', 'confirmation', 'responseTime', 'followUp'],
+  errors: ['requiredField', 'invalidEmail', 'invalidPhone', 'minLength', 'maxLength'],
+  other: ['officeHours', 'callUs', 'emailUs', 'visitUs', 'faq']
+} as const;
+
+// カテゴリー名の翻訳
+const categoryNames = {
+  en: {
+    basic: 'Basic Information',
+    personal: 'Personal Information',
+    address: 'Address Information',
+    content: 'Message Content',
+    inquiryTypes: 'Inquiry Types',
+    buttons: 'Buttons',
+    consent: 'Consent & Requirements',
+    completion: 'Completion Messages',
+    errors: 'Error Messages',
+    other: 'Other Elements'
+  },
+  ja: {
+    basic: '基本情報',
+    personal: '個人情報',
+    address: '住所情報',
+    content: 'メッセージ内容',
+    inquiryTypes: 'お問い合わせ種別',
+    buttons: 'ボタン',
+    consent: '同意・必須項目',
+    completion: '完了メッセージ',
+    errors: 'エラーメッセージ',
+    other: 'その他の要素'
+  }
+} as const;
+
+// 型の安全性を確保するためのヘルパー関数
+function getLabel(language: 'en' | 'ja', key: keyof typeof contactLabels.en | keyof typeof contactLabels.ja) {
+  return contactLabels[language][key];
+}
+
+function getCategoryName(language: 'en' | 'ja', category: keyof typeof categories) {
+  return categoryNames[language][category];
+}
+---
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問い合わせラベルコピーツール</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+      color: #333;
+      background-color: #f8f9fa;
+      position: relative;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2c3e50;
+      font-size: 2rem;
+    }
+    
+    .language-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    
+    .floating-language-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .language-button {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    
+    .language-button.active {
+      background-color: #4a90e2;
+      color: white;
+      border-color: #3a80d2;
+    }
+    
+    .scroll-top-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .scroll-top-button.visible {
+      opacity: 1;
+    }
+    
+    .example-container {
+      margin-bottom: 40px;
+    }
+    
+    .category-section {
+      margin-bottom: 30px;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    .category-title {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 8px;
+    }
+    
+    .label-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .label-item:last-child {
+      border-bottom: none;
+    }
+    
+    .item-label {
+      font-size: 1rem;
+      color: #333;
+    }
+    
+    .note {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #e8f4fd;
+      border-left: 4px solid #4a90e2;
+      font-size: 0.9rem;
+      border-radius: 4px;
+    }
+    
+    .page-description {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 30px;
+      color: #666;
+      line-height: 1.6;
+    }
+    
+    @media (max-width: 768px) {
+      .label-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <GlobalNavigation />
+  
+  <h1>お問い合わせラベルコピーツール</h1>
+  
+  <div class="page-description">
+    <p>お問い合わせフォームやページで使用される様々なラベルを簡単にコピーできるツールです。英語と日本語の両方に対応しています。</p>
+  </div>
+  
+  <div class="language-toggle">
+    <button class="language-button active" id="en-toggle">英語 (English)</button>
+    <button class="language-button" id="ja-toggle">日本語 (Japanese)</button>
+  </div>
+  
+  <div id="en-container" class="example-container">
+    <h2>Contact Form Labels (English)</h2>
+    
+    {Object.entries(categories).map(([category, keys]) => (
+      <div class="category-section">
+        <h3 class="category-title">{getCategoryName('en', category as keyof typeof categories)}</h3>
+        
+        {keys.map(key => (
+          <div class="label-item">
+            <div class="item-label">{getLabel('en', key as keyof typeof contactLabels.en)}</div>
+            <CopyButton text={getLabel('en', key as keyof typeof contactLabels.en)} language="en" />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+
+  <div id="ja-container" class="example-container" style="display: none;">
+    <h2>お問い合わせフォームラベル（日本語）</h2>
+    
+    {Object.entries(categories).map(([category, keys]) => (
+      <div class="category-section">
+        <h3 class="category-title">{getCategoryName('ja', category as keyof typeof categories)}</h3>
+        
+        {keys.map(key => (
+          <div class="label-item">
+            <div class="item-label">{getLabel('ja', key as keyof typeof contactLabels.ja)}</div>
+            <CopyButton text={getLabel('ja', key as keyof typeof contactLabels.ja)} language="ja" />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+  
+  <div class="floating-language-toggle">
+    <button class="language-button active" id="floating-en-toggle">EN</button>
+    <button class="language-button" id="floating-ja-toggle">JP</button>
+  </div>
+  
+  <button class="scroll-top-button" id="scroll-top" aria-label="ページトップへスクロール">↑</button>
+
+  <div class="note">
+    <p><strong>使い方：</strong> 各項目の横にある「コピー」ボタンをクリックすると、そのラベルテキストをクリップボードにコピーできます。お問い合わせフォームやページの作成時にご活用ください。</p>
+    <p><strong>ヒント：</strong> 効果的なお問い合わせフォームは、必要最小限の入力項目と明確なラベルを使用し、送信後の次のステップを明示することが重要です。</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const enToggle = document.getElementById('en-toggle');
+      const jaToggle = document.getElementById('ja-toggle');
+      const enContainer = document.getElementById('en-container');
+      const jaContainer = document.getElementById('ja-container');
+      
+      const floatingEnToggle = document.getElementById('floating-en-toggle');
+      const floatingJaToggle = document.getElementById('floating-ja-toggle');
+      
+      const scrollTopButton = document.getElementById('scroll-top');
+      
+      function switchToEnglish() {
+        if (enContainer && jaContainer) {
+          enContainer.style.display = 'block';
+          jaContainer.style.display = 'none';
+        }
+        
+        if (enToggle && jaToggle) {
+          enToggle.classList.add('active');
+          jaToggle.classList.remove('active');
+        }
+        
+        if (floatingEnToggle && floatingJaToggle) {
+          floatingEnToggle.classList.add('active');
+          floatingJaToggle.classList.remove('active');
+        }
+      }
+      
+      function switchToJapanese() {
+        if (enContainer && jaContainer) {
+          enContainer.style.display = 'none';
+          jaContainer.style.display = 'block';
+        }
+        
+        if (enToggle && jaToggle) {
+          enToggle.classList.remove('active');
+          jaToggle.classList.add('active');
+        }
+        
+        if (floatingEnToggle && floatingJaToggle) {
+          floatingEnToggle.classList.remove('active');
+          floatingJaToggle.classList.add('active');
+        }
+      }
+      
+      if (enToggle && jaToggle) {
+        enToggle.addEventListener('click', switchToEnglish);
+        jaToggle.addEventListener('click', switchToJapanese);
+      }
+      
+      if (floatingEnToggle && floatingJaToggle) {
+        floatingEnToggle.addEventListener('click', switchToEnglish);
+        floatingJaToggle.addEventListener('click', switchToJapanese);
+      }
+      
+      window.addEventListener('scroll', () => {
+        if (scrollTopButton) {
+          if (window.scrollY > 300) {
+            scrollTopButton.classList.add('visible');
+          } else {
+            scrollTopButton.classList.remove('visible');
+          }
+        }
+      });
+      
+      if (scrollTopButton) {
+        scrollTopButton.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html> 
