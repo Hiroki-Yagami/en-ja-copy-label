@@ -1,0 +1,87 @@
+---
+// CopyButton.astro
+interface Props {
+  text: string;
+  language: 'en' | 'ja';
+}
+
+const { text, language } = Astro.props;
+const buttonLabel = language === 'ja' ? 'コピー' : 'Copy';
+---
+
+<button class="copy-button" data-text={text} data-language={language}>
+  <span class="default-text">{buttonLabel}</span>
+  <span class="copied-text">{language === 'ja' ? 'コピーしました！' : 'Copied!'}</span>
+</button>
+
+<style>
+  .copy-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .copy-button:hover {
+    background-color: #e0e0e0;
+  }
+
+  .copy-button.copied {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  .copied-text {
+    display: none;
+  }
+
+  .copy-button.copied .default-text {
+    display: none;
+  }
+
+  .copy-button.copied .copied-text {
+    display: inline;
+  }
+
+  /* モバイル対応 */
+  @media (max-width: 768px) {
+    .copy-button {
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+  }
+</style>
+
+<script>
+  // クライアントサイドのみで実行されるスクリプト
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyButtons = document.querySelectorAll('.copy-button');
+    
+    copyButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        const text = button.getAttribute('data-text');
+        
+        if (text) {
+          try {
+            await navigator.clipboard.writeText(text);
+            button.classList.add('copied');
+            
+            // 2秒後に元の状態に戻す
+            setTimeout(() => {
+              button.classList.remove('copied');
+            }, 2000);
+          } catch (err) {
+            console.error('クリップボードへのコピーに失敗しました:', err);
+          }
+        }
+      });
+    });
+  });
+</script> 

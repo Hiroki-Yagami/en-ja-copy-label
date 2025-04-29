@@ -1,0 +1,120 @@
+---
+// GlobalNavigation.astro
+const pages = [
+  { path: '/', label: 'ホーム' },
+  { path: '/CopyButtonExample', label: 'ナビゲーションラベル' },
+  { path: '/CompanyProfileCopy', label: '会社概要項目' },
+  { path: '/LandingPageLabels', label: 'LP項目' }
+];
+
+// 現在のパスを取得
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="global-nav">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <a href="/">コピーツール</a>
+    </div>
+    <ul class="nav-links">
+      {pages.map(page => (
+        <li>
+          <a 
+            href={page.path} 
+            class={currentPath === page.path || (currentPath === '/' && page.path === '/') ? 'active' : ''}
+          >
+            {page.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .global-nav {
+    background-color: #2c3e50;
+    color: white;
+    padding: 0;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  
+  .nav-logo a {
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-decoration: none;
+    padding: 15px 0;
+    display: inline-block;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links a {
+    display: block;
+    color: #ecf0f1;
+    text-decoration: none;
+    padding: 15px;
+    transition: background-color 0.3s;
+  }
+  
+  .nav-links a:hover {
+    background-color: #34495e;
+  }
+  
+  .nav-links a.active {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .nav-container {
+      flex-direction: column;
+      padding: 0;
+    }
+    
+    .nav-logo {
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+      background-color: #34495e;
+    }
+    
+    .nav-links {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+    
+    .nav-links li {
+      flex: 1 0 50%;
+      text-align: center;
+    }
+    
+    .nav-links a {
+      padding: 10px;
+    }
+  }
+</style> 

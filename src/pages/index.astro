@@ -1,16 +1,112 @@
 ---
-
+import GlobalNavigation from '../components/GlobalNavigation.astro';
 ---
 
-<html lang="en">
+<html lang="ja">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>コピーツール集</title>
+		<style>
+			body {
+				font-family: 'Arial', sans-serif;
+				max-width: 1000px;
+				margin: 0 auto;
+				padding: 0 20px 60px;
+				color: #333;
+				background-color: #f8f9fa;
+			}
+			
+			h1 {
+				text-align: center;
+				margin-bottom: 30px;
+				color: #2c3e50;
+			}
+			
+			.tools-container {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: 20px;
+				margin-top: 30px;
+			}
+			
+			.tool-card {
+				background-color: white;
+				border-radius: 8px;
+				box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+				padding: 20px;
+				transition: transform 0.3s ease, box-shadow 0.3s ease;
+			}
+			
+			.tool-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+			}
+			
+			.tool-card h2 {
+				color: #3498db;
+				margin-top: 0;
+				border-bottom: 2px solid #f0f0f0;
+				padding-bottom: 10px;
+			}
+			
+			.tool-card p {
+				color: #666;
+				line-height: 1.6;
+			}
+			
+			.tool-card a {
+				display: inline-block;
+				margin-top: 15px;
+				background-color: #3498db;
+				color: white;
+				text-decoration: none;
+				padding: 8px 16px;
+				border-radius: 4px;
+				font-weight: bold;
+				transition: background-color 0.3s;
+			}
+			
+			.tool-card a:hover {
+				background-color: #2980b9;
+			}
+			
+			.intro {
+				text-align: center;
+				max-width: 800px;
+				margin: 0 auto 40px;
+				line-height: 1.6;
+				color: #555;
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<GlobalNavigation />
+		
+		<h1>コピーツール集</h1>
+		
+		<div class="intro">
+			<p>ウェブサイト制作に役立つ様々なラベルやテキストを簡単にコピーできるツール集です。英語と日本語の両方に対応しています。</p>
+		</div>
+		
+		<div class="tools-container">
+			<div class="tool-card">
+				<h2>ナビゲーションラベル</h2>
+				<p>ウェブサイトのナビゲーションメニューによく使われるラベルをコピーできます。英語と日本語の両方に対応しています。</p>
+				<a href="/CopyButtonExample">ツールを開く</a>
+			</div>
+			
+			<div class="tool-card">
+				<h2>会社概要項目</h2>
+				<p>会社概要ページによく使われる項目名をコピーできます。基本情報から沿革まで幅広く対応しています。</p>
+				<a href="/CompanyProfileCopy">ツールを開く</a>
+			</div>
+			
+			<div class="tool-card">
+				<h2>ランディングページ項目</h2>
+				<p>効果的なランディングページに必要な様々なセクションのラベルをコピーできます。</p>
+				<a href="/LandingPageLabels">ツールを開く</a>
+			</div>
+		</div>
 	</body>
 </html>

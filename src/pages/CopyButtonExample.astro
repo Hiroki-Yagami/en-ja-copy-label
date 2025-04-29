@@ -1,0 +1,413 @@
+---
+// CopyButtonExample.astro
+import CopyButton from './components/CopyButton.astro';
+import GlobalNavigation from '../components/GlobalNavigation.astro';
+
+// ナビゲーションボタンのラベル例（拡張版）
+const navigationLabels = {
+  en: {
+    // 基本ナビゲーション
+    home: 'Home',
+    about: 'About',
+    services: 'Services',
+    products: 'Products',
+    contact: 'Contact Us',
+    
+    // ユーザー関連
+    login: 'Log In',
+    signup: 'Sign Up',
+    profile: 'My Profile',
+    account: 'Account Settings',
+    dashboard: 'Dashboard',
+    logout: 'Log Out',
+    
+    // ショッピング関連
+    shop: 'Shop',
+    cart: 'Shopping Cart',
+    checkout: 'Checkout',
+    orders: 'My Orders',
+    wishlist: 'Wishlist',
+    
+    // コンテンツ関連
+    blog: 'Blog',
+    news: 'News',
+    events: 'Events',
+    gallery: 'Gallery',
+    faq: 'FAQ',
+    
+    // その他
+    search: 'Search',
+    menu: 'Menu',
+    settings: 'Settings',
+    help: 'Help & Support',
+    privacy: 'Privacy Policy',
+    terms: 'Terms of Service',
+    
+    // LP見出し（英語）
+    features: 'Features',
+    benefits: 'Benefits',
+    testimonials: 'Testimonials',
+    pricing: 'Pricing',
+    cta: 'Get Started',
+    howto: 'How It Works',
+    comparison: 'Comparison',
+    support: 'Support',
+    download: 'Download',
+    trial: 'Free Trial'
+  },
+  ja: {
+    // 基本ナビゲーション
+    home: 'ホーム',
+    about: '会社概要',
+    services: 'サービス',
+    products: '製品情報',
+    contact: 'お問い合わせ',
+    
+    // ユーザー関連
+    login: 'ログイン',
+    signup: '新規登録',
+    profile: 'マイプロフィール',
+    account: 'アカウント設定',
+    dashboard: 'ダッシュボード',
+    logout: 'ログアウト',
+    
+    // ショッピング関連
+    shop: 'ショップ',
+    cart: 'カート',
+    checkout: 'レジに進む',
+    orders: '注文履歴',
+    wishlist: 'お気に入り',
+    
+    // コンテンツ関連
+    blog: 'ブログ',
+    news: 'ニュース',
+    events: 'イベント',
+    gallery: 'ギャラリー',
+    faq: 'よくある質問',
+    
+    // その他
+    search: '検索',
+    menu: 'メニュー',
+    settings: '設定',
+    help: 'ヘルプ＆サポート',
+    privacy: 'プライバシーポリシー',
+    terms: '利用規約',
+    
+    // LP見出し（日本語）
+    features: '機能紹介',
+    benefits: 'メリット',
+    testimonials: 'お客様の声',
+    pricing: '料金プラン',
+    cta: '今すぐ始める',
+    howto: 'ご利用方法',
+    comparison: '比較表',
+    support: 'サポート体制',
+    download: 'ダウンロード',
+    trial: '無料体験'
+  }
+} as const;
+
+// カテゴリー分け
+const categories = {
+  basic: ['home', 'about', 'services', 'products', 'contact'],
+  user: ['login', 'signup', 'profile', 'account', 'dashboard', 'logout'],
+  shopping: ['shop', 'cart', 'checkout', 'orders', 'wishlist'],
+  content: ['blog', 'news', 'events', 'gallery', 'faq'],
+  other: ['search', 'menu', 'settings', 'help', 'privacy', 'terms'],
+  lp: ['features', 'benefits', 'testimonials', 'pricing', 'cta', 'howto', 'comparison', 'support', 'download', 'trial']
+} as const;
+
+// カテゴリー名の翻訳
+const categoryNames = {
+  en: {
+    basic: 'Basic Navigation',
+    user: 'User Account',
+    shopping: 'Shopping',
+    content: 'Content',
+    other: 'Other',
+    lp: 'Landing Page Headings'
+  },
+  ja: {
+    basic: '基本ナビゲーション',
+    user: 'ユーザーアカウント',
+    shopping: 'ショッピング',
+    content: 'コンテンツ',
+    other: 'その他',
+    lp: 'ランディングページ見出し'
+  }
+} as const;
+
+// 型の安全性を確保するためのヘルパー関数
+function getLabel(language: 'en' | 'ja', key: keyof typeof navigationLabels.en | keyof typeof navigationLabels.ja) {
+  return navigationLabels[language][key];
+}
+
+function getCategoryName(language: 'en' | 'ja', category: keyof typeof categories) {
+  return categoryNames[language][category];
+}
+---
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ナビゲーションボタンラベルコピー例</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+      color: #333;
+      background-color: #f8f9fa;
+      position: relative;
+    }
+    
+    .example-container {
+      margin-bottom: 40px;
+    }
+    
+    .category-section {
+      margin-bottom: 30px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      background-color: #f9f9f9;
+    }
+    
+    .category-title {
+      margin-top: 0;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eee;
+      color: #333;
+    }
+    
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .label-copy-pair {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .nav-label {
+      font-weight: bold;
+      min-width: 120px;
+    }
+    
+    .language-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .language-button {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+    
+    .language-button.active {
+      background-color: #4a90e2;
+      color: white;
+      border-color: #3a80d2;
+    }
+    
+    /* フローティング言語切り替えボタン - 新規追加 */
+    .floating-language-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* スクロールトップボタン - 新規追加 */
+    .scroll-top-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .scroll-top-button.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <GlobalNavigation />
+  
+  <h1>ナビゲーションボタンラベルコピー例</h1>
+  
+  <div class="language-toggle">
+    <button class="language-button active" id="en-toggle">英語 (English)</button>
+    <button class="language-button" id="ja-toggle">日本語 (Japanese)</button>
+  </div>
+  
+  <div id="en-container" class="example-container">
+    <h2>英語ナビゲーションボタン</h2>
+    
+    {Object.entries(categories).map(([category, keys]) => (
+      <div class="category-section">
+        <h3 class="category-title">{getCategoryName('en', category as keyof typeof categories)}</h3>
+        <div class="button-group">
+          {keys.map(key => (
+            <div class="label-copy-pair">
+              <span class="nav-label">{getLabel('en', key as keyof typeof navigationLabels.en)}</span>
+              <CopyButton text={getLabel('en', key as keyof typeof navigationLabels.en)} language="en" />
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div id="ja-container" class="example-container" style="display: none;">
+    <h2>日本語ナビゲーションボタン</h2>
+    
+    {Object.entries(categories).map(([category, keys]) => (
+      <div class="category-section">
+        <h3 class="category-title">{getCategoryName('ja', category as keyof typeof categories)}</h3>
+        <div class="button-group">
+          {keys.map(key => (
+            <div class="label-copy-pair">
+              <span class="nav-label">{getLabel('ja', key as keyof typeof navigationLabels.ja)}</span>
+              <CopyButton text={getLabel('ja', key as keyof typeof navigationLabels.ja)} language="ja" />
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- フローティング言語切り替えボタン - 新規追加 -->
+  <div class="floating-language-toggle">
+    <button class="language-button active" id="floating-en-toggle">EN</button>
+    <button class="language-button" id="floating-ja-toggle">JP</button>
+  </div>
+  
+  <!-- スクロールトップボタン - 新規追加 -->
+  <button class="scroll-top-button" id="scroll-top" aria-label="ページトップへスクロール">↑</button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const enToggle = document.getElementById('en-toggle');
+      const jaToggle = document.getElementById('ja-toggle');
+      const enContainer = document.getElementById('en-container');
+      const jaContainer = document.getElementById('ja-container');
+      
+      // フローティング言語切り替えボタン - 新規追加
+      const floatingEnToggle = document.getElementById('floating-en-toggle');
+      const floatingJaToggle = document.getElementById('floating-ja-toggle');
+      
+      // スクロールトップボタン - 新規追加
+      const scrollTopButton = document.getElementById('scroll-top');
+      
+      // 英語表示に切り替える関数
+      function switchToEnglish() {
+        if (enContainer && jaContainer) {
+          enContainer.style.display = 'block';
+          jaContainer.style.display = 'none';
+        }
+        
+        // 通常のボタン状態を更新
+        if (enToggle && jaToggle) {
+          enToggle.classList.add('active');
+          jaToggle.classList.remove('active');
+        }
+        
+        // フローティングボタン状態を更新
+        if (floatingEnToggle && floatingJaToggle) {
+          floatingEnToggle.classList.add('active');
+          floatingJaToggle.classList.remove('active');
+        }
+      }
+      
+      // 日本語表示に切り替える関数
+      function switchToJapanese() {
+        if (enContainer && jaContainer) {
+          enContainer.style.display = 'none';
+          jaContainer.style.display = 'block';
+        }
+        
+        // 通常のボタン状態を更新
+        if (enToggle && jaToggle) {
+          enToggle.classList.remove('active');
+          jaToggle.classList.add('active');
+        }
+        
+        // フローティングボタン状態を更新
+        if (floatingEnToggle && floatingJaToggle) {
+          floatingEnToggle.classList.remove('active');
+          floatingJaToggle.classList.add('active');
+        }
+      }
+      
+      // 通常の言語切り替えボタンのイベントリスナー
+      if (enToggle && jaToggle) {
+        enToggle.addEventListener('click', switchToEnglish);
+        jaToggle.addEventListener('click', switchToJapanese);
+      }
+      
+      // フローティング言語切り替えボタンのイベントリスナー
+      if (floatingEnToggle && floatingJaToggle) {
+        floatingEnToggle.addEventListener('click', switchToEnglish);
+        floatingJaToggle.addEventListener('click', switchToJapanese);
+      }
+      
+      // スクロールトップボタンの表示制御
+      window.addEventListener('scroll', () => {
+        if (scrollTopButton) {
+          if (window.scrollY > 300) {
+            scrollTopButton.classList.add('visible');
+          } else {
+            scrollTopButton.classList.remove('visible');
+          }
+        }
+      });
+      
+      // スクロールトップボタンのクリックイベント
+      if (scrollTopButton) {
+        scrollTopButton.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

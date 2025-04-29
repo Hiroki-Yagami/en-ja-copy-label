@@ -1,0 +1,544 @@
+---
+import CopyButton from './components/CopyButton.astro';
+import GlobalNavigation from '../components/GlobalNavigation.astro';
+
+// ランディングページによく使われるラベル項目
+const landingPageLabels = {
+  en: {
+    // ヘッダー・ナビゲーション
+    home: 'Home',
+    about: 'About',
+    features: 'Features',
+    pricing: 'Pricing',
+    contact: 'Contact',
+    login: 'Log In',
+    signup: 'Sign Up',
+    
+    // ヒーローセクション
+    mainHeading: 'Main Heading',
+    subHeading: 'Sub Heading',
+    heroDescription: 'Hero Description',
+    ctaPrimary: 'Get Started',
+    ctaSecondary: 'Learn More',
+    
+    // 特徴・メリット
+    featureTitle: 'Feature Title',
+    featureDescription: 'Feature Description',
+    benefitsTitle: 'Benefits',
+    benefitItem: 'Benefit Item',
+    howItWorks: 'How It Works',
+    
+    // 社会的証明
+    testimonialsTitle: 'What Our Customers Say',
+    testimonialQuote: 'Testimonial Quote',
+    customerName: 'Customer Name',
+    customerPosition: 'Customer Position',
+    trustedBy: 'Trusted By',
+    
+    // 料金プラン
+    pricingTitle: 'Pricing Plans',
+    planBasic: 'Basic',
+    planPro: 'Professional',
+    planEnterprise: 'Enterprise',
+    monthly: 'Monthly',
+    yearly: 'Yearly',
+    perMonth: 'per month',
+    perYear: 'per year',
+    
+    // FAQ
+    faqTitle: 'Frequently Asked Questions',
+    faqQuestion: 'FAQ Question',
+    faqAnswer: 'FAQ Answer',
+    
+    // CTA（コール・トゥ・アクション）
+    ctaSectionTitle: 'Ready to Get Started?',
+    ctaSectionDescription: 'CTA Description',
+    ctaButton: 'Start Free Trial',
+    noCredit: 'No credit card required',
+    
+    // フッター
+    companyInfo: 'Company Info',
+    resources: 'Resources',
+    legal: 'Legal',
+    privacyPolicy: 'Privacy Policy',
+    termsOfService: 'Terms of Service',
+    copyright: 'Copyright',
+    
+    // ポップアップ・モーダル
+    closeButton: 'Close',
+    subscribeTitle: 'Subscribe to Our Newsletter',
+    emailPlaceholder: 'Enter your email',
+    subscribeButton: 'Subscribe',
+    
+    // 特別オファー
+    limitedOffer: 'Limited Time Offer',
+    discount: 'Discount',
+    specialPrice: 'Special Price',
+    couponCode: 'Coupon Code',
+    
+    // 信頼性要素
+    securePayment: 'Secure Payment',
+    moneyBack: '30-Day Money Back Guarantee',
+    customerSupport: '24/7 Customer Support',
+    
+    // 比較セクション
+    comparisonTitle: 'Why Choose Us',
+    competitor: 'Competitor',
+    ourSolution: 'Our Solution',
+    
+    // カウントダウン
+    offerEnds: 'Offer Ends In',
+    days: 'Days',
+    hours: 'Hours',
+    minutes: 'Minutes',
+    seconds: 'Seconds'
+  },
+  ja: {
+    // ヘッダー・ナビゲーション
+    home: 'ホーム',
+    about: '私たちについて',
+    features: '機能',
+    pricing: '料金プラン',
+    contact: 'お問い合わせ',
+    login: 'ログイン',
+    signup: '新規登録',
+    
+    // ヒーローセクション
+    mainHeading: 'メインタイトル',
+    subHeading: 'サブタイトル',
+    heroDescription: 'ヒーロー説明文',
+    ctaPrimary: '今すぐ始める',
+    ctaSecondary: '詳しく見る',
+    
+    // 特徴・メリット
+    featureTitle: '機能タイトル',
+    featureDescription: '機能説明',
+    benefitsTitle: 'メリット',
+    benefitItem: 'メリット項目',
+    howItWorks: 'ご利用方法',
+    
+    // 社会的証明
+    testimonialsTitle: 'お客様の声',
+    testimonialQuote: '推薦の言葉',
+    customerName: 'お客様名',
+    customerPosition: 'お客様の役職',
+    trustedBy: '導入企業',
+    
+    // 料金プラン
+    pricingTitle: '料金プラン',
+    planBasic: 'ベーシック',
+    planPro: 'プロフェッショナル',
+    planEnterprise: 'エンタープライズ',
+    monthly: '月額',
+    yearly: '年額',
+    perMonth: '月あたり',
+    perYear: '年あたり',
+    
+    // FAQ
+    faqTitle: 'よくある質問',
+    faqQuestion: 'よくある質問',
+    faqAnswer: '回答',
+    
+    // CTA（コール・トゥ・アクション）
+    ctaSectionTitle: 'さあ、始めましょう',
+    ctaSectionDescription: 'CTA説明文',
+    ctaButton: '無料トライアルを始める',
+    noCredit: 'クレジットカード不要',
+    
+    // フッター
+    companyInfo: '会社情報',
+    resources: 'リソース',
+    legal: '法的情報',
+    privacyPolicy: 'プライバシーポリシー',
+    termsOfService: '利用規約',
+    copyright: '著作権',
+    
+    // ポップアップ・モーダル
+    closeButton: '閉じる',
+    subscribeTitle: 'ニュースレターを購読する',
+    emailPlaceholder: 'メールアドレスを入力',
+    subscribeButton: '購読する',
+    
+    // 特別オファー
+    limitedOffer: '期間限定オファー',
+    discount: '割引',
+    specialPrice: '特別価格',
+    couponCode: 'クーポンコード',
+    
+    // 信頼性要素
+    securePayment: '安全な決済',
+    moneyBack: '30日間返金保証',
+    customerSupport: '24時間365日サポート',
+    
+    // 比較セクション
+    comparisonTitle: '選ばれる理由',
+    competitor: '競合他社',
+    ourSolution: '当社のソリューション',
+    
+    // カウントダウン
+    offerEnds: 'オファー終了まで',
+    days: '日',
+    hours: '時間',
+    minutes: '分',
+    seconds: '秒'
+  }
+} as const;
+
+// カテゴリー分け
+const categories = {
+  navigation: ['home', 'about', 'features', 'pricing', 'contact', 'login', 'signup'],
+  hero: ['mainHeading', 'subHeading', 'heroDescription', 'ctaPrimary', 'ctaSecondary'],
+  features: ['featureTitle', 'featureDescription', 'benefitsTitle', 'benefitItem', 'howItWorks'],
+  testimonials: ['testimonialsTitle', 'testimonialQuote', 'customerName', 'customerPosition', 'trustedBy'],
+  pricing: ['pricingTitle', 'planBasic', 'planPro', 'planEnterprise', 'monthly', 'yearly', 'perMonth', 'perYear'],
+  faq: ['faqTitle', 'faqQuestion', 'faqAnswer'],
+  cta: ['ctaSectionTitle', 'ctaSectionDescription', 'ctaButton', 'noCredit'],
+  footer: ['companyInfo', 'resources', 'legal', 'privacyPolicy', 'termsOfService', 'copyright'],
+  popup: ['closeButton', 'subscribeTitle', 'emailPlaceholder', 'subscribeButton'],
+  offer: ['limitedOffer', 'discount', 'specialPrice', 'couponCode'],
+  trust: ['securePayment', 'moneyBack', 'customerSupport'],
+  comparison: ['comparisonTitle', 'competitor', 'ourSolution'],
+  countdown: ['offerEnds', 'days', 'hours', 'minutes', 'seconds']
+} as const;
+
+// カテゴリー名の翻訳
+const categoryNames = {
+  en: {
+    navigation: 'Navigation',
+    hero: 'Hero Section',
+    features: 'Features & Benefits',
+    testimonials: 'Testimonials',
+    pricing: 'Pricing',
+    faq: 'FAQ',
+    cta: 'Call to Action',
+    footer: 'Footer',
+    popup: 'Popups & Modals',
+    offer: 'Special Offers',
+    trust: 'Trust Elements',
+    comparison: 'Comparison',
+    countdown: 'Countdown'
+  },
+  ja: {
+    navigation: 'ナビゲーション',
+    hero: 'ヒーローセクション',
+    features: '機能・メリット',
+    testimonials: 'お客様の声',
+    pricing: '料金プラン',
+    faq: 'よくある質問',
+    cta: 'コール・トゥ・アクション',
+    footer: 'フッター',
+    popup: 'ポップアップ・モーダル',
+    offer: '特別オファー',
+    trust: '信頼性要素',
+    comparison: '比較',
+    countdown: 'カウントダウン'
+  }
+} as const;
+
+// 型の安全性を確保するためのヘルパー関数
+function getLabel(language: 'en' | 'ja', key: keyof typeof landingPageLabels.en | keyof typeof landingPageLabels.ja) {
+  return landingPageLabels[language][key];
+}
+
+function getCategoryName(language: 'en' | 'ja', category: keyof typeof categories) {
+  return categoryNames[language][category];
+}
+---
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ランディングページラベルコピーツール</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+      color: #333;
+      background-color: #f8f9fa;
+      position: relative;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2c3e50;
+      font-size: 2rem;
+    }
+    
+    .language-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    
+    .floating-language-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .language-button {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    
+    .language-button.active {
+      background-color: #4a90e2;
+      color: white;
+      border-color: #3a80d2;
+    }
+    
+    .scroll-top-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .scroll-top-button.visible {
+      opacity: 1;
+    }
+    
+    .example-container {
+      margin-bottom: 40px;
+    }
+    
+    .category-section {
+      margin-bottom: 30px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
+    }
+    
+    .category-section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .category-title {
+      margin-top: 0;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eee;
+      color: #2c3e50;
+      font-size: 1.2rem;
+    }
+    
+    .label-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .label-item:last-child {
+      border-bottom: none;
+    }
+    
+    .item-label {
+      font-weight: bold;
+      color: #555;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .note {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #e8f4fd;
+      border-left: 4px solid #4a90e2;
+      font-size: 0.9rem;
+      border-radius: 4px;
+    }
+    
+    .page-description {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 30px;
+      color: #666;
+      line-height: 1.6;
+    }
+    
+    @media (max-width: 768px) {
+      .label-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <GlobalNavigation />
+  
+  <h1>ランディングページラベルコピーツール</h1>
+  
+  <div class="page-description">
+    <p>効果的なランディングページ作成に必要な様々なセクションのラベルを簡単にコピーできるツールです。英語と日本語の両方に対応しています。</p>
+  </div>
+  
+  <div class="language-toggle">
+    <button class="language-button active" id="en-toggle">英語 (English)</button>
+    <button class="language-button" id="ja-toggle">日本語 (Japanese)</button>
+  </div>
+  
+  <div id="en-container" class="example-container">
+    <h2>Landing Page Labels (English)</h2>
+    
+    {Object.entries(categories).map(([category, keys]) => (
+      <div class="category-section">
+        <h3 class="category-title">{getCategoryName('en', category as keyof typeof categories)}</h3>
+        
+        {keys.map(key => (
+          <div class="label-item">
+            <div class="item-label">{getLabel('en', key as keyof typeof landingPageLabels.en)}</div>
+            <CopyButton text={getLabel('en', key as keyof typeof landingPageLabels.en)} language="en" />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+
+  <div id="ja-container" class="example-container" style="display: none;">
+    <h2>ランディングページラベル（日本語）</h2>
+    
+    {Object.entries(categories).map(([category, keys]) => (
+      <div class="category-section">
+        <h3 class="category-title">{getCategoryName('ja', category as keyof typeof categories)}</h3>
+        
+        {keys.map(key => (
+          <div class="label-item">
+            <div class="item-label">{getLabel('ja', key as keyof typeof landingPageLabels.ja)}</div>
+            <CopyButton text={getLabel('ja', key as keyof typeof landingPageLabels.ja)} language="ja" />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+  
+  <div class="floating-language-toggle">
+    <button class="language-button active" id="floating-en-toggle">EN</button>
+    <button class="language-button" id="floating-ja-toggle">JP</button>
+  </div>
+  
+  <button class="scroll-top-button" id="scroll-top" aria-label="ページトップへスクロール">↑</button>
+
+  <div class="note">
+    <p><strong>使い方：</strong> 各項目の横にある「コピー」ボタンをクリックすると、そのラベルテキストをクリップボードにコピーできます。ランディングページ作成時にご活用ください。</p>
+    <p><strong>ヒント：</strong> 効果的なランディングページには、明確なヒーローセクション、説得力のある特徴・メリット、社会的証明、そして強力なCTAが重要です。</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const enToggle = document.getElementById('en-toggle');
+      const jaToggle = document.getElementById('ja-toggle');
+      const enContainer = document.getElementById('en-container');
+      const jaContainer = document.getElementById('ja-container');
+      
+      const floatingEnToggle = document.getElementById('floating-en-toggle');
+      const floatingJaToggle = document.getElementById('floating-ja-toggle');
+      
+      const scrollTopButton = document.getElementById('scroll-top');
+      
+      function switchToEnglish() {
+        if (enContainer && jaContainer) {
+          enContainer.style.display = 'block';
+          jaContainer.style.display = 'none';
+        }
+        
+        if (enToggle && jaToggle) {
+          enToggle.classList.add('active');
+          jaToggle.classList.remove('active');
+        }
+        
+        if (floatingEnToggle && floatingJaToggle) {
+          floatingEnToggle.classList.add('active');
+          floatingJaToggle.classList.remove('active');
+        }
+      }
+      
+      function switchToJapanese() {
+        if (enContainer && jaContainer) {
+          enContainer.style.display = 'none';
+          jaContainer.style.display = 'block';
+        }
+        
+        if (enToggle && jaToggle) {
+          enToggle.classList.remove('active');
+          jaToggle.classList.add('active');
+        }
+        
+        if (floatingEnToggle && floatingJaToggle) {
+          floatingEnToggle.classList.remove('active');
+          floatingJaToggle.classList.add('active');
+        }
+      }
+      
+      if (enToggle && jaToggle) {
+        enToggle.addEventListener('click', switchToEnglish);
+        jaToggle.addEventListener('click', switchToJapanese);
+      }
+      
+      if (floatingEnToggle && floatingJaToggle) {
+        floatingEnToggle.addEventListener('click', switchToEnglish);
+        floatingJaToggle.addEventListener('click', switchToJapanese);
+      }
+      
+      window.addEventListener('scroll', () => {
+        if (scrollTopButton) {
+          if (window.scrollY > 300) {
+            scrollTopButton.classList.add('visible');
+          } else {
+            scrollTopButton.classList.remove('visible');
+          }
+        }
+      });
+      
+      if (scrollTopButton) {
+        scrollTopButton.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

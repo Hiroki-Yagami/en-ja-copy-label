@@ -1,0 +1,451 @@
+---
+import CopyButton from './components/CopyButton.astro';
+import GlobalNavigation from '../components/GlobalNavigation.astro';
+
+// 会社概要によく使われる項目
+const companyProfileItems = {
+  en: {
+    // 基本情報
+    companyName: 'Company Name',
+    established: 'Established',
+    capital: 'Capital',
+    representative: 'Representative',
+    employees: 'Number of Employees',
+    businessHours: 'Business Hours',
+    businessType: 'Business Type',
+    fiscalYear: 'Fiscal Year',
+    
+    // 所在地情報
+    headquarters: 'Headquarters',
+    branches: 'Branch Offices',
+    phone: 'Phone Number',
+    fax: 'Fax Number',
+    email: 'Email Address',
+    website: 'Website',
+    
+    // 事業内容
+    businessDescription: 'Business Description',
+    mainBusiness: 'Main Business',
+    services: 'Services',
+    products: 'Products',
+    industries: 'Industries Served',
+    
+    // 取引先・関連情報
+    clients: 'Major Clients',
+    partners: 'Business Partners',
+    affiliations: 'Affiliations',
+    certifications: 'Certifications',
+    banks: 'Main Banks',
+    
+    // 企業理念・ビジョン
+    philosophy: 'Corporate Philosophy',
+    mission: 'Mission Statement',
+    vision: 'Vision',
+    values: 'Core Values',
+    slogan: 'Corporate Slogan',
+    
+    // 沿革
+    history: 'Company History',
+    milestones: 'Milestones',
+    awards: 'Awards & Recognition',
+    
+    // 採用情報
+    careers: 'Careers',
+    benefits: 'Employee Benefits',
+    workEnvironment: 'Work Environment',
+    
+    // 法的情報
+    privacyPolicy: 'Privacy Policy',
+    termsOfService: 'Terms of Service',
+    legalNotice: 'Legal Notice'
+  },
+  ja: {
+    // 基本情報
+    companyName: '会社名',
+    established: '設立年月日',
+    capital: '資本金',
+    representative: '代表者',
+    employees: '従業員数',
+    businessHours: '営業時間',
+    businessType: '事業形態',
+    fiscalYear: '決算期',
+    
+    // 所在地情報
+    headquarters: '本社所在地',
+    branches: '事業所・支店',
+    phone: '電話番号',
+    fax: 'FAX番号',
+    email: 'メールアドレス',
+    website: 'ウェブサイト',
+    
+    // 事業内容
+    businessDescription: '事業内容',
+    mainBusiness: '主要事業',
+    services: '提供サービス',
+    products: '取扱商品',
+    industries: '対応業界',
+    
+    // 取引先・関連情報
+    clients: '主要取引先',
+    partners: '提携先',
+    affiliations: '所属団体',
+    certifications: '認証・資格',
+    banks: '主要取引銀行',
+    
+    // 企業理念・ビジョン
+    philosophy: '企業理念',
+    mission: '経営理念',
+    vision: 'ビジョン',
+    values: '行動指針',
+    slogan: '企業スローガン',
+    
+    // 沿革
+    history: '会社沿革',
+    milestones: '主要実績',
+    awards: '受賞歴',
+    
+    // 採用情報
+    careers: '採用情報',
+    benefits: '福利厚生',
+    workEnvironment: '職場環境',
+    
+    // 法的情報
+    privacyPolicy: 'プライバシーポリシー',
+    termsOfService: '利用規約',
+    legalNotice: '特定商取引法に基づく表記'
+  }
+} as const;
+
+// カテゴリー分け
+const categories = {
+  basic: ['companyName', 'established', 'capital', 'representative', 'employees', 'businessHours', 'businessType', 'fiscalYear'],
+  location: ['headquarters', 'branches', 'phone', 'fax', 'email', 'website'],
+  business: ['businessDescription', 'mainBusiness', 'services', 'products', 'industries'],
+  relations: ['clients', 'partners', 'affiliations', 'certifications', 'banks'],
+  philosophy: ['philosophy', 'mission', 'vision', 'values', 'slogan'],
+  history: ['history', 'milestones', 'awards'],
+  careers: ['careers', 'benefits', 'workEnvironment'],
+  legal: ['privacyPolicy', 'termsOfService', 'legalNotice']
+} as const;
+
+// カテゴリー名の翻訳
+const categoryNames = {
+  en: {
+    basic: 'Basic Information',
+    location: 'Location & Contact',
+    business: 'Business Details',
+    relations: 'Business Relations',
+    philosophy: 'Corporate Philosophy',
+    history: 'History & Achievements',
+    careers: 'Careers',
+    legal: 'Legal Information'
+  },
+  ja: {
+    basic: '基本情報',
+    location: '所在地・連絡先',
+    business: '事業内容',
+    relations: '取引先・関連情報',
+    philosophy: '企業理念',
+    history: '沿革・実績',
+    careers: '採用情報',
+    legal: '法的情報'
+  }
+} as const;
+
+// 型の安全性を確保するためのヘルパー関数
+function getLabel(language: 'en' | 'ja', key: keyof typeof companyProfileItems.en | keyof typeof companyProfileItems.ja) {
+  return companyProfileItems[language][key];
+}
+
+function getCategoryName(language: 'en' | 'ja', category: keyof typeof categories) {
+  return categoryNames[language][category];
+}
+---
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>会社概要項目コピーツール</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+      color: #333;
+      background-color: #f8f9fa;
+      position: relative;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
+    
+    .language-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    
+    .language-button {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .language-button.active {
+      background-color: #4a90e2;
+      color: white;
+      border-color: #3a80d2;
+    }
+    
+    .example-container {
+      margin-bottom: 40px;
+    }
+    
+    .category-section {
+      margin-bottom: 30px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .category-title {
+      margin-top: 0;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eee;
+      color: #2c3e50;
+      font-size: 1.2rem;
+    }
+    
+    .company-profile-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .company-profile-item:last-child {
+      border-bottom: none;
+    }
+    
+    .item-label {
+      font-weight: bold;
+      color: #555;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .note {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-left: 4px solid #4a90e2;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .company-profile-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+    
+    /* フローティング言語切り替えボタン - 新規追加 */
+    .floating-language-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* スクロールトップボタン - 新規追加 */
+    .scroll-top-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .scroll-top-button.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <GlobalNavigation />
+  
+  <h1>会社概要項目コピーツール</h1>
+  
+  <div class="language-toggle">
+    <button class="language-button active" id="en-toggle">英語 (English)</button>
+    <button class="language-button" id="ja-toggle">日本語 (Japanese)</button>
+  </div>
+  
+  <div id="en-container" class="example-container">
+    <h2>Company Profile Items (English)</h2>
+    
+    {Object.entries(categories).map(([category, keys]) => (
+      <div class="category-section">
+        <h3 class="category-title">{getCategoryName('en', category as keyof typeof categories)}</h3>
+        
+        {keys.map(key => (
+          <div class="company-profile-item">
+            <div class="item-label">{getLabel('en', key as keyof typeof companyProfileItems.en)}</div>
+            <CopyButton text={getLabel('en', key as keyof typeof companyProfileItems.en)} language="en" />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+
+  <div id="ja-container" class="example-container" style="display: none;">
+    <h2>会社概要項目（日本語）</h2>
+    
+    {Object.entries(categories).map(([category, keys]) => (
+      <div class="category-section">
+        <h3 class="category-title">{getCategoryName('ja', category as keyof typeof categories)}</h3>
+        
+        {keys.map(key => (
+          <div class="company-profile-item">
+            <div class="item-label">{getLabel('ja', key as keyof typeof companyProfileItems.ja)}</div>
+            <CopyButton text={getLabel('ja', key as keyof typeof companyProfileItems.ja)} language="ja" />
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+  
+  <!-- フローティング言語切り替えボタン - 新規追加 -->
+  <div class="floating-language-toggle">
+    <button class="language-button active" id="floating-en-toggle">EN</button>
+    <button class="language-button" id="floating-ja-toggle">JP</button>
+  </div>
+  
+  <!-- スクロールトップボタン - 新規追加 -->
+  <button class="scroll-top-button" id="scroll-top" aria-label="ページトップへスクロール">↑</button>
+  
+  <div class="note">
+    <p><strong>使い方：</strong> 各項目の横にある「コピー」ボタンをクリックすると、その項目名をクリップボードにコピーできます。会社概要ページの作成時にご活用ください。</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const enToggle = document.getElementById('en-toggle');
+      const jaToggle = document.getElementById('ja-toggle');
+      const enContainer = document.getElementById('en-container');
+      const jaContainer = document.getElementById('ja-container');
+      
+      // フローティング言語切り替えボタン - 新規追加
+      const floatingEnToggle = document.getElementById('floating-en-toggle');
+      const floatingJaToggle = document.getElementById('floating-ja-toggle');
+      
+      // スクロールトップボタン - 新規追加
+      const scrollTopButton = document.getElementById('scroll-top');
+      
+      // 英語表示に切り替える関数
+      function switchToEnglish() {
+        if (enContainer && jaContainer) {
+          enContainer.style.display = 'block';
+          jaContainer.style.display = 'none';
+        }
+        
+        // 通常のボタン状態を更新
+        if (enToggle && jaToggle) {
+          enToggle.classList.add('active');
+          jaToggle.classList.remove('active');
+        }
+        
+        // フローティングボタン状態を更新
+        if (floatingEnToggle && floatingJaToggle) {
+          floatingEnToggle.classList.add('active');
+          floatingJaToggle.classList.remove('active');
+        }
+      }
+      
+      // 日本語表示に切り替える関数
+      function switchToJapanese() {
+        if (enContainer && jaContainer) {
+          enContainer.style.display = 'none';
+          jaContainer.style.display = 'block';
+        }
+        
+        // 通常のボタン状態を更新
+        if (enToggle && jaToggle) {
+          enToggle.classList.remove('active');
+          jaToggle.classList.add('active');
+        }
+        
+        // フローティングボタン状態を更新
+        if (floatingEnToggle && floatingJaToggle) {
+          floatingEnToggle.classList.remove('active');
+          floatingJaToggle.classList.add('active');
+        }
+      }
+      
+      // 通常の言語切り替えボタンのイベントリスナー
+      if (enToggle && jaToggle) {
+        enToggle.addEventListener('click', switchToEnglish);
+        jaToggle.addEventListener('click', switchToJapanese);
+      }
+      
+      // フローティング言語切り替えボタンのイベントリスナー
+      if (floatingEnToggle && floatingJaToggle) {
+        floatingEnToggle.addEventListener('click', switchToEnglish);
+        floatingJaToggle.addEventListener('click', switchToJapanese);
+      }
+      
+      // スクロールトップボタンの表示制御
+      window.addEventListener('scroll', () => {
+        if (scrollTopButton) {
+          if (window.scrollY > 300) {
+            scrollTopButton.classList.add('visible');
+          } else {
+            scrollTopButton.classList.remove('visible');
+          }
+        }
+      });
+      
+      // スクロールトップボタンのクリックイベント
+      if (scrollTopButton) {
+        scrollTopButton.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+    });
+  </script>
+</body>
+</html> 
